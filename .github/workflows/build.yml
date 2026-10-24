@@ -5,7 +5,7 @@ on:
     branches: [ master, main ]
   pull_request:
     branches: [ master, main ]
-  workflow_dispatch: # Cho phép bạn bấm nút chạy thủ công trên GitHub
+  workflow_dispatch:
 
 jobs:
   build:
@@ -23,11 +23,14 @@ jobs:
         cache: 'maven'
 
     - name: Build with Maven (Skip Tests)
-      # Thêm -Dmaven.test.skip=true để bỏ qua lỗi JUnit 4.11
-      run: mvn clean package install -Dmaven.test.skip=true
+      run: mvn clean package -Dmaven.test.skip=true
+
+    - name: List target directory (debug)
+      run: ls -la target/
 
     - name: Upload JAR artifact
       uses: actions/upload-artifact@v4
       with:
         name: mcMMO-Classic-Jar
-        path: target/*.jar
+        path: target/mcMMO.jar
+        if-no-files-found: error
